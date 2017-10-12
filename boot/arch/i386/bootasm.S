@@ -51,6 +51,19 @@ jnz seta20.60 #wait for empty input buffer
 mov $0xdf, %al
 out %al, $0x60
 
+#clear bss
+cbss:
+mov bss_start, %ax
+mov $0, (%ax)
+mov bss_end, %bx
+test %bx, %ax
+jz cbssok
+add $1, %ax
+jmp cbss
+cbssok:
+
+
+
 .text
 
 bootasm:
