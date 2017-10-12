@@ -25,7 +25,32 @@
 .globl _start
 _start:
 
+.code16
+
+cli #close interrupt
+cld #string direction
+
+# zero the segment register
+xor %ax, %ax
+mov %ax, %ds
+mov %ax, %ss
+mov %ax, %es
+
+#Close A20s compatibility
+seta20.64: #send 0xd1 to port 0x64
+in $0x64, %al
+test $0x2, %al
+jnz seta20.60 #wait for empty input buffer
+mov $0xd1, %al
+out %al, $0x64
+
+seta20.60: #send 0xdf to port 0x60
+in $0x64, %al
+test $0x2, %al
+jnz seta20.60 #wait for empty input buffer
+mov $0xdf, %al
+out %al, $0x60
+
 .text
 
 bootasm:
-
