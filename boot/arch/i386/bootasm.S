@@ -36,34 +36,68 @@ mov %ax, %ds
 mov %ax, %ss
 mov %ax, %es
 
+
 #Close A20s compatibility
-seta20.64: #send 0xd1 to port 0x64
+seta20.1: #send 0xd1 to port 0x64
 in $0x64, %al
 test $0x2, %al
-jnz seta20.60 #wait for empty input buffer
+jnz seta20.1 #wait for empty input buffer
 mov $0xd1, %al
 out %al, $0x64
 
-seta20.60: #send 0xdf to port 0x60
+seta20.2: #send 0xdf to port 0x60
 in $0x64, %al
 test $0x2, %al
-jnz seta20.60 #wait for empty input buffer
+jnz seta20.2 #wait for empty input buffer
 mov $0xdf, %al
 out %al, $0x60
 
-#clear bss
-cbss:
-mov bss_start, %ax
-mov $0, (%ax)
-mov bss_end, %bx
-test %bx, %ax
-jz cbssok
-add $1, %ax
-jmp cbss
-cbssok:
+#switch to protected mode
+lgdt gdtdesc
+mov %cr0, %eax
+or $CR0_PE_ON, %eax
+mov %eax, %cr0
 
-
+ljump $PROT_MODE_CSEG, $bootasm
 
 .text
-
+.code32
 bootasm:
+#set the segment registers
+mov $PROT_MODE_CSEG, %ax
+mov %ax, %ds
+mov %ax, %es
+mov %ax, %fs
+mov %ax, %gs
+mov %ax, %ss
+
+#set the stack
+mov $start, %esp
+call bootmain
+
+#endless loop in case the kernal returns
+loop:
+    jmp loop
+
+.data
+.p2align 2
+gdt:
+    .byte 0,0,0,0,0,0,0,0                  #NULL
+    .byte 0xFF,0xFF,0,0,0,0x9A,0xCF,0      #code segment(exec&read)
+    .byte 0xFF,0xFF,0,0,0,0x92,0xCF,0      #data segment(write)
+
+gdtdesc:
+    .word 0x17
+    .long gdt
+
+
+#clear bss
+#cbss:
+#mov %bss_start, %ax
+#mov $0, (%ax)
+#mov %bss_end, %bx
+#test %bx, %ax
+#jz cbssok
+#add $1, %ax
+#jmp cbss
+#cbssok:
