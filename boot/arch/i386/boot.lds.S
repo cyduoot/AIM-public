@@ -28,4 +28,19 @@
  */
 
 ENTRY(_start)
-
+SECTIONS
+{
+    . = 0x7c00;
+    .text : {
+        mbr = .;
+        *(.text);
+    }
+    .data : { *(.data) }
+    .rodata : { *(.rodata) }
+    . = 0x7e00;
+    .bss : {
+		bss_start = .;
+		*(.bss);
+		bss_end = .;
+	}
+}
