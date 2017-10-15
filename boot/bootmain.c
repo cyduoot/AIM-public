@@ -30,7 +30,7 @@ const uint8_t magic[] = {
 		0x7f, 0x45, 0x4c, 0x46
 	};
 
-void readseg(void*, uint, uint);
+void readseg(void*, uint32_t, uint32_t);
 
 __noreturn
 void bootmain(void)
@@ -69,7 +69,7 @@ void waitdisk(void)
 	while ((inb(0x1F7) & 0xC0) != 0x40) ;
 }
 
-void readsect(void *dst, uint offset)
+void readsect(void *dst, uint32_t offset)
 {
 	waitdisk();
 	outb(0x1F2, 1);
@@ -83,13 +83,13 @@ void readsect(void *dst, uint offset)
     insl(0x1F0, dst, SECTSIZE/4);
 }
 
-void readseg(void* pa, uint count, uint offset)
+void readseg(void* pa, uint32_t count, uint32_t offset)
 {
 	void *epa;
 	epa = pa + count;
 	pa −= offset % SECTSIZE;
 
-    offset = (offset/SECTSIZE) + 1;  
+    offset = (offset/SECTSIZE) + 1;
 
     for(; pa < epa; pa += SECTSIZE, offset++)
         readsect(pa, offset);
