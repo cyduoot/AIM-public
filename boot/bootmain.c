@@ -44,7 +44,7 @@ void bootmain(void)
 
 	readseg((void*)elf, 4096, 0);
 
-	for (int i = 0; i < sizeof(magic); i++) {
+	for (uint32_t i = 0; i < sizeof(magic); i++) {
 		if (elf->e_ != magic[i]) goto bad;
 	} // check elf magic number
 
@@ -87,10 +87,10 @@ void readseg(void* pa, uint32_t count, uint32_t offset)
 {
 	void *epa;
 	epa = pa + count;
-	pa −= offset % SECTSIZE;
 
-    offset = (offset/SECTSIZE) + 1;
+	pa -= offset * SECTSIZE;
+	offset = (offset / SECTSIZE) + 1;
 
-    for(; pa < epa; pa += SECTSIZE, offset++)
-        readsect(pa, offset);
+	for (; pa < epa; pa += SECTSIZE, offset ++)
+		readsect(pa, offset);
 }
