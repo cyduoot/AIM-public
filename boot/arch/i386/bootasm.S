@@ -26,10 +26,12 @@
 
 .section .entry
 
+.code16
+
 .globl _start
 _start:
 
-.code16
+
 
 cli #close interrupt
 cld #string direction
@@ -76,7 +78,7 @@ mov %ax, %gs
 mov %ax, %ss
 
 #set the stack
-mov $start, %esp
+mov $_start, %esp
 call bootmain
 
 #endless loop in case the kernal returns

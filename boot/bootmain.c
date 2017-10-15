@@ -74,10 +74,10 @@ void readsect(void *dst, uint32_t offset)
 {
 	waitdisk();
 	outb(0x1F2, 1);
-    outb(0x1F3, offset);
-    outb(0x1F4, offset >> 8);
-    outb(0x1F5, offset >> 16);
-    outb(0x1F6, (offset >> 24) | 0xE0);
+    outb(0x1F3, offset & 0xFF);
+    outb(0x1F4, (offset >> 8) & 0xFF);
+    outb(0x1F5, (offset >> 16) & 0xFF);
+    outb(0x1F6, ((offset >> 24) | 0xE0) & 0xFF);
     outb(0x1F7, 0x20);
 
     waitdisk();
