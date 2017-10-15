@@ -20,6 +20,10 @@
 #include <config.h>
 #endif /* HAVE_CONFIG_H */
 
+.set PROT_MODE_CSEG, 0x8
+.set PROT_MODE_DSEG, 0x10
+.set CR0_PE_ON,      0x1 
+
 .section .entry
 
 .globl _start
