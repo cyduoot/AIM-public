@@ -22,7 +22,7 @@
 
 .set PROT_MODE_CSEG, 0x8
 .set PROT_MODE_DSEG, 0x10
-.set CR0_PE_ON,      0x1 
+.set CR0_PE_ON,      0x1
 
 .section .entry
 
@@ -62,13 +62,13 @@ mov %cr0, %eax
 or $CR0_PE_ON, %eax
 mov %eax, %cr0
 
-ljump $PROT_MODE_CSEG, $bootasm
+ljmp $PROT_MODE_CSEG, $bootasm
 
 .text
 .code32
 bootasm:
 #set the segment registers
-mov $PROT_MODE_CSEG, %ax
+mov $PROT_MODE_DSEG, %ax
 mov %ax, %ds
 mov %ax, %es
 mov %ax, %fs
