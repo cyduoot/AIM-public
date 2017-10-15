@@ -35,29 +35,29 @@ void readseg(void*, uint32_t, uint32_t);
 __noreturn
 void bootmain(void)
 {
-	struct elf_hdr *elf;
-	struct elf_phdr *ph, *eph;
+	elf_hdr *elf;
+	elf_phdr *ph, *eph;
 	void (*entry)(void);
 	void *pa;
 
-	elf = (struct elf_hdr*)0x10000;
+	elf = (elf_hdr*)0x10000;
 
 	readseg((void*)elf, 4096, 0);
 
 	for (uint32_t i = 0; i < sizeof(magic); i++) {
-		if (elf->e_ != magic[i]) goto bad;
+		if (elf->e_ident[i] != magic[i]) goto bad;
 	} // check elf magic number
 
 //load segment
-	ph = (struct elf_phdr*)((void*)elf + elf->phoff);
-	eph = ph + elf->phnum;
+	ph = (elf_phdr*)((void*)elf + elf->e_phoff);
+	eph = ph + elf->e_phnum;
 	for (; ph < eph; ph++)
 	{
-		pa = (void*)ph->paddr;
-		readseg(pa, ph->filesz, ph->offset);
+		pa = (void*)ph->p_paddr;
+		readseg(pa, ph->p_filesz, ph->p_offset);
 	}
 
-	entry = (void(*)(void))(elf->entry);
+	entry = (void(*)(void))(elf->e_entry);
 	entry();
 
 bad:
