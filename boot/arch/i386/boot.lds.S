@@ -28,19 +28,27 @@
  */
 
 ENTRY(_start)
+
 SECTIONS
 {
     . = 0x7c00;
     .text : {
-        mbr = .;
-        *(.text);
-    }
-    .data : { *(.data) }
-    .rodata : { *(.rodata) }
-    . = 0x7e00;
-    .bss : {
-		bss_start = .;
-		*(.bss);
-		bss_end = .;
+		/* entry comes first */
+		PROVIDE(stacktop = .);
+		PROVIDE(mbr = .);
+		*(.entry);
+		*(.text);
+		*(.rodata);
+		*(.data);
 	}
+    . = 0x7e00;
+	.bss : {
+		PROVIDE(bss_start = .);
+		*(.bss);
+		PROVIDE(bss_end = .);
+	}
+    /DISCARD/ : {
+    *(.eh_frame);
+    *(.comment)
+    }
 }
