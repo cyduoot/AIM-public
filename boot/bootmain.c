@@ -23,6 +23,7 @@
 #include <sys/types.h>
 #include <aim/boot.h>
 #include <elf.h>
+#include <asm.h>
 
 #define SECTSIZE 512
 

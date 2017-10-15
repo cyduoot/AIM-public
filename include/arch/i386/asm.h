@@ -19,7 +19,18 @@
 static inline
 uint8_t inb(uint16_t port)
 {
-	return 0;
+	uint8_t data;
+	asm volatile("inb %w1,%0" : "=a" (data) : "d" (port));
+	return data;
+}
+
+static inline
+void insl(int port, void *addr, int cnt)
+{
+	asm volatile("cld\n\trepne\n\tinsl"
+		     : "=D" (addr), "=c" (cnt)
+		     : "d" (port), "0" (addr), "1" (cnt)
+		     : "memory", "cc");
 }
 
 static inline
@@ -37,6 +48,7 @@ uint32_t inl(uint16_t port)
 static inline
 void outb(uint16_t port, uint8_t data)
 {
+	asm volatile("outb %0,%w1" : : "a" (data), "d" (port));
 }
 
 static inline
@@ -48,4 +60,3 @@ static inline
 void outl(uint16_t port, uint8_t data)
 {
 }
-
