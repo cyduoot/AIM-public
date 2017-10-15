@@ -25,3 +25,9 @@
 .globl _start
 _start:
 
+cli
+cld
+mov _start, %esp
+mov %esp, %ebp
+
+call	master_early_init  

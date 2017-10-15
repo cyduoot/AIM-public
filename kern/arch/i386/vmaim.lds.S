@@ -29,3 +29,15 @@
 
 ENTRY(_start)
 
+SECTIONS{
+    .text : {
+        *(.text);
+    }
+    .data : { *(.data) }
+    .rodata : { *(.rodata) }
+    .bss : {
+		bss_start = .;
+		*(.bss);
+		bss_end = .;
+	}
+}
