@@ -30,6 +30,7 @@
 ENTRY(_start)
 
 SECTIONS{
+    . = KERN_START;
     .text : {
         *(.text);
     }
@@ -39,5 +40,9 @@ SECTIONS{
 		bss_start = .;
 		*(.bss);
 		bss_end = .;
+        . = ALIGN(4096);
+		PROVIDE(kstack = .);
+		. += KSTACKSIZE;
+		PROVIDE(kstack_top = .);
 	}
 }

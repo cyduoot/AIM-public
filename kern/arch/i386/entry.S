@@ -27,7 +27,7 @@ _start:
 
 cli
 cld
-mov _start, %esp
+mov $kstack_top, %esp
 mov %esp, %ebp
 
-call	master_early_init  
+call	master_early_init
