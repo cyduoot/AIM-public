@@ -29,5 +29,14 @@ cli
 cld
 mov _start, %esp
 mov %esp, %ebp
+cbss:
+mov %bss_start, %ax
+mov $0, (%ax)
+mov %bss_end, %bx
+test %bx, %ax
+jz cbssok
+add $1, %ax
+#jmp cbss
+cbssok:
 
-call	master_early_init  
+call	master_early_init

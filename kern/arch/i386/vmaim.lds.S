@@ -36,8 +36,8 @@ SECTIONS{
     .data : { *(.data) }
     .rodata : { *(.rodata) }
     .bss : {
-		bss_start = .;
+		PROVIDE(bss_start = .);
 		*(.bss);
-		bss_end = .;
+		PROVIDE(bss_end = .);
 	}
 }
