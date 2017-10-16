@@ -29,13 +29,14 @@ cli
 cld
 mov _start, %esp
 mov %esp, %ebp
+mov $0, %ecx
 cbss:
-mov %bss_start, %ax
-mov $0, (%ax)
-mov %bss_end, %bx
-test %bx, %ax
+mov $bss_start, %eax
+mov %ecx, (%eax)
+mov $bss_end, %ebx
+test %ebx, %eax
 jz cbssok
-add $1, %ax
+add $1, %eax
 #jmp cbss
 cbssok:
 
