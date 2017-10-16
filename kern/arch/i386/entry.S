@@ -37,7 +37,7 @@ mov $bss_end, %ebx
 test %ebx, %eax
 jz cbssok
 add $1, %eax
-#jmp cbss
+jmp cbss
 cbssok:
 
 call	master_early_init
