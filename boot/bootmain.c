@@ -89,7 +89,7 @@ static inline void readseg(void* pa, uint32_t count, uint32_t offset)
 	void *epa;
 	epa = pa + count;
 
-	pa -= offset * SECTSIZE;
+	pa = (void *)((uint32_t)pa & (1 - SECTSIZE));//1-SECTSIZE = 0xFFFFF000 in order to align to SECTSIZE
 	offset = (offset / SECTSIZE) + 1;
 
 	for (; pa < epa; pa += SECTSIZE, offset ++)
